@@ -2,37 +2,39 @@
 #include <raymath.h>
 #include <rcamera.h>
 
-#define WINDOW_WIDTH 1600
-#define WINDOW_HEIGHT 1000
-#define WINDOW_NAME "SHON"
-
-int targetfps = 60;
+#define SCREENWIDTH 1600
+#define SCREENHEIGHT 1200
 
 int main(void)
 {
-  struct Vector2 wektor = {0, 0};
-  int xdirection = 1;
-  int ydirection = 1;
-  SetTargetFPS(targetfps);
+  InitWindow(SCREENWIDTH, SCREENHEIGHT, "CAMERA DEMO");
 
-  InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
+  Camera Camera = {0};
+  Camera.position = (Vector3){0.0f, 2.0f, 4.0f};
+  Camera.target = (Vector3){0.0f, 2.0f, 0.0f};
+  Camera.up = (Vector3){0.0f, 1.0f, 0.0f};
+  Camera.fovy = 60.0f;
+  Camera.projection = CAMERA_PERSPECTIVE;
+
+  int camera_mode = CAMERA_FIRST_PERSON;
+
+  DisableCursor();
+  SetTargetFPS(60);
 
   while (!WindowShouldClose())
   {
+    UpdateCamera(&Camera, camera_mode);
+
     BeginDrawing();
     ClearBackground(RAYWHITE);
+    BeginMode3D(Camera);
 
-    wektor.x += xdirection * GetFrameTime() * 100.0f;
-    wektor.y += ydirection * GetFrameTime() * 100.0f;
-    if (wektor.x <= 0 || wektor.x >= WINDOW_WIDTH)
-    {
-      xdirection *= -1.0f;
-    }
-    if (wektor.y <= 0 || wektor.y >= WINDOW_HEIGHT)
-    {
-      ydirection *= -1.0f;
-    }
-    DrawCircleV(wektor, 30, MAGENTA);
+    DrawPlane((Vector3){0.0f, 0.0f, 0.0f}, (Vector2){32.0f, 32.0f}, LIGHTGRAY);
+    DrawCube((Vector3){-16.0f, 2.5f, 0.0f}, 1.0f, 5.0f, 32.0f, BLUE);
+    DrawCube((Vector3){16.0f, 2.5f, 0.0f}, 1.0f, 5.0f, 32.0f, LIME);
+    DrawCube((Vector3){0.0f, 2.5f, 16.0f}, 32.0f, 5.0f, 1.0f, GOLD);
+    
+    EndMode3D();
     EndDrawing();
   }
 
