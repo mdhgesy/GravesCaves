@@ -3,7 +3,7 @@ CFLAGS = -Wall -I./include
 
 LDFLAGS = -L./lib -lraylib -framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL
 
-SRC = src/main.c
+SRC = $(wildcard src/*.c)
 OUT = game
 
 all: $(OUT)
