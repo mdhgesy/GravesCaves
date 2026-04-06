@@ -1,6 +1,6 @@
 #include <inputs.h>
 
-void HandleMovementInput(Vector3 *CameraVector)
+void HandleMovementInput(Vector3 *CameraVector, float base_move_speed)
 {
   CameraVector->x = 0;
   CameraVector->y = 0;
