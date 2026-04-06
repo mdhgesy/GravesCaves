@@ -1,24 +1,23 @@
 #include <inputs.h>
 
-void HandleMovementInput(Vector3 *CameraVector, float base_move_speed)
+Vector2 GetPlayerInputDirection()
 {
-  CameraVector->x = 0;
-  CameraVector->y = 0;
+  Vector2 direction = {0.0f, 0.0f};
 
-  if (IsKeyDown(KEY_W))
-  {
-    CameraVector->x = 1.5 * GetFrameTime();
-  }
-  if (IsKeyDown(KEY_S))
-  {
-    CameraVector->x = -1.5 * GetFrameTime();
-  }
-  if (IsKeyDown(KEY_A))
-  {
-    CameraVector->y = -1.5 * GetFrameTime();
-  }
-  if (IsKeyDown(KEY_D))
-  {
-    CameraVector->y = 1.5 * GetFrameTime();
-  }
+  // opposite movement cancels out
+  // A(1) - D(1) = 0
+
+  direction.y = IsKeyDown(KEY_D) - IsKeyDown(KEY_A);
+  direction.x = IsKeyDown(KEY_W) - IsKeyDown(KEY_S);
+
+  return Vector2Normalize(direction);
+}
+
+Vector3 GetPlayerMouseInput()
+{
+  Vector3 mouse_movement = {0};
+  mouse_movement.x = GetMouseDelta().x * 0.1f;
+  mouse_movement.y = GetMouseDelta().y * 0.1f;
+
+  return mouse_movement;
 }

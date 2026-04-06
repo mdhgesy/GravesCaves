@@ -3,4 +3,5 @@
 #include <raylib.h>
 #include <raymath.h>
 
-void HandleMovementInput(Vector3 *CameraVector, float base_move_speed);
+Vector2 GetPlayerInputDirection();
+Vector3 GetPlayerMouseInput();

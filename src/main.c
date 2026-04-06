@@ -3,29 +3,45 @@
 #include <rcamera.h>
 
 #include <inputs.h>
+#include <playermovement.h>
 
 #define SCREENWIDTH 1600
 #define SCREENHEIGHT 1200
+
+typedef struct
+{
+  Vector2 MoveDirection;
+  Vector3 PlayerVector;
+  int Health;
+} Player;
 
 void SetupCamera(Camera *C);
 
 int main(void)
 {
   InitWindow(SCREENWIDTH, SCREENHEIGHT, "CAMERA DEMO");
-
-  Vector3 CameraMoveVector = {0};
-  Camera Camera = {0};
-  SetupCamera(&Camera);
-
-  float base_move_speed = 1.5;
-
   DisableCursor();
   SetTargetFPS(60);
 
+  float delta_t = 0;
+
+  // INPUT SHOULD BE DIVIDED INTO 3 STEPS;
+  // 1. GET INPUTS
+  // 2. CALCULATE SPEED / MOVEMENT
+  // 3. MOVE THE PLAYER (CAMERA)
+
+  Camera Camera = {0};
+
+  SetupCamera(&Camera);
+
   while (!WindowShouldClose())
   {
-    HandleMovementInput(&CameraMoveVector, base_move_speed);
-    UpdateCameraPro(&Camera, CameraMoveVector, (Vector3){GetMouseDelta().x * 0.05, GetMouseDelta().y * 0.05, 0.0f}, 0.0f);
+    delta_t = GetFrameTime();
+
+    Vector2 InputDirection = GetPlayerInputDirection();
+    Vector3 CameraVector = CalculateCameraVector(InputDirection, 1.5f, delta_t);
+    Vector3 MouseVector = GetPlayerMouseInput();
+    UpdateCameraPro(&Camera, CameraVector, MouseVector, 0.0f);
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
